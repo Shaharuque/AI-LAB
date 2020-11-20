@@ -41,3 +41,9 @@ int main() {
    printf("ndivision of two number is : ",res2);
    return (0);
 }
+int add3(num1,num2){
+   int num3=4;
+   int num4;
+   num4=num1+num2+num3;
+   return num4;
+}
