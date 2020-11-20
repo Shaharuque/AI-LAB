@@ -20,6 +20,10 @@ int div(int num1, int num2) {
    num3 = num1 / num2;
    return (num3);
 }
+
+int nothing(){
+   return 0;
+}
 int main() {
    int num1, num2, res;
  
