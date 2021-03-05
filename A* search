@@ -1,0 +1,67 @@
+import random
+import math
+def init():
+	list1 = [2, 1, 5, 0, 8, 4, 10, 0, 20, 10]
+	return list1
+
+def calc_cost(state):
+	cost = 0
+	for i in range(len(state)):
+		for j in range(i+1,len(state)):
+			if state[i] > state[j]:
+				cost = cost + 1
+	return cost
+
+def goal_test(state):
+	if calc_cost(state) == 0:#current state ar cost 0 checking
+		return True
+	else:
+		return False
+#part-1
+def state_generation(current_state, current_cost):
+	for i in range(len(current_state)):
+		for j in range(i+1,len(current_state)):
+			current_state[i], current_state[j] = current_state[j], current_state[i] #swapping  create new child state aitae current_state now
+			new_cost = calc_cost(current_state)
+			if new_cost > current_cost:#child state ar cost boro current state thekey 
+				return state_generation(current_state, new_cost)# new current state ar cost prev cur state cost thekey beshi holey recursive call hoye notun state create korbey
+	return current_state,new_cost  #kono child state better na means current state thekey child state ar cost beshi tokhn aita return
+
+#part-2
+def simulated_annealing(current_state, current_cost):
+	for i in range(len(current_state)):
+		for j in range(i+1,len(current_state)):
+			current_state[i], current_state[j] = current_state[j], current_state[i]#current state changed to child state
+			new_cost = calc_cost(current_state)
+			if new_cost > current_cost:#child state cost> current/prev/parent state cost
+				return simulated_annealing(current_state, new_cost)
+			elif new_cost == current_cost:
+				rand = random.uniform(0,1)
+				del_e = -1
+				probability = math.exp(del_e)
+				if(rand <= probability):
+					return simulated_annealing(current_state, new_cost)
+			elif new_cost < current_cost:#good state pabey condition true holey means child state cost parent state thekey choto			  
+				rand = random.uniform(0,1)
+				del_e = new_cost - current_cost
+				probability = math.exp(del_e)
+				if(rand <= probability):
+					return simulated_annealing(current_state, new_cost)								
+	return current_state, None
+
+
+
+list2 = init()
+value1 = calc_cost(list2)
+while not goal_test(list2):#jotokhn porjonto goaal test=0  return korley terminate
+	list2, value = state_generation(list2, value1)
+	if value == 0:#stuck current state not 0
+		print("Sorted:", list2)
+print("simulated annealing part>>>>>>>>>>>>>>>>>>")
+
+list3 = init()
+value2 = calc_cost(list3)
+while not goal_test(list3):
+	list3, value = simulated_annealing(list3, value2)
+	if value == None:
+		print("Simulated_Annealing:", list3)
